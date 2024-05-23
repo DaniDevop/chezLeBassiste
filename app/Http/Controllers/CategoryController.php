@@ -15,14 +15,14 @@ class CategoryController extends Controller
 
         $category=Category::all();
 
-        return response()->json(['data'=>$category],200);
+        return $category;
     }
 
 
     public function addCategory(Request $request){
 
         $category=new Category();
-        $category->category=$request->name;
+        $category->category=$request->category;
         $category->save();
         return response()->json(['data'=>$category],201);
     }
@@ -33,8 +33,19 @@ class CategoryController extends Controller
         if(!$category){
             return response()->json(['message'=>'Category not found'],404);
         }
-        $category->category=$request->name;
+        $category->category=$request->category;
+        $category->touch();
         $category->save();
         return response()->json(['data'=>$category],201);
+    }
+
+    public function getCategoryById( $id){
+
+
+        $category=Category::find($id);
+       if( !$category){
+        return response()->json(['message'=>'Category not found'],404);
+       }
+        return  $category;
     }
 }
